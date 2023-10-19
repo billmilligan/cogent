@@ -1,0 +1,19 @@
+
+As a Builder, I want to generate a single, simple Java class with minimal content so that I can prove the concept.
+
+Scenario 1: Vanilla Generation
+	When I set up a Java class with a valid name
+	And the Java class has no modifiers
+	And the Java class has no class-level comment
+	And the Java class has no package
+	And the Java class is public
+	And the Java class has no generic type
+	And the Java class has no supertype declared
+	And the Java class implements no interfaces
+	And I compile the class
+	Then the class will compile without errors
+	And the class will have the expected name
+	And the class will have the correct visibility modifier
+	And the class supertype will be correct
+	And the class package will be correct
+	And the class will have the expected modifiers
