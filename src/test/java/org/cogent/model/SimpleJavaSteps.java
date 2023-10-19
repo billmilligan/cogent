@@ -57,6 +57,20 @@ public class SimpleJavaSteps {
 		scope.set ( EXPECTED_TYPE_MODIFIERS, new HashSet <> ( ) ) ;
 	}
 
+	@When ( "the Java type definition is set as abstract" )
+	public void selectedDefIsAbstract ( ) {
+		JavaTypeDefinition def = scope.get ( SELECTED_DEFINITION ) ;
+		def.setModifiers ( Set.of ( TypeModifier.ABSTRACT ) ) ;
+		scope.set ( EXPECTED_TYPE_MODIFIERS, Set.of ( "abstract" ) ) ;
+	}
+
+	@When ( "the Java type definition is set as final" )
+	public void selectedDefIsFinal ( ) {
+		JavaTypeDefinition def = scope.get ( SELECTED_DEFINITION ) ;
+		def.setModifiers ( Set.of ( TypeModifier.FINAL ) ) ;
+		scope.set ( EXPECTED_TYPE_MODIFIERS, Set.of ( "final" ) ) ;
+	}
+
 	@When ( "the Java type definition has no top-level comment" )
 	public void selectedDefHasNoTopComments ( ) {
 		scope.set ( EXPECTED_TOP_LEVEL_COMMENTS, new ArrayList <> ( ) );
@@ -204,6 +218,19 @@ public class SimpleJavaSteps {
 		Class <?> actual = scope.get ( ACTUAL_CLASS ) ;
 		Object newInstance = actual.getDeclaredConstructor ( ).newInstance ( ) ;
 		assertNotNull ( newInstance, "New class instantiated!" ) ;
+	}
+
+	@Then ( "I cannot instantiate the class with a no-arg constructor because it is not a concrete type" )
+	public void instantiationFailsBecauseNotConcrete ( ) throws Exception {
+		Class <?> actual = scope.get ( ACTUAL_CLASS ) ;
+		boolean caughtException = false ;
+		try {
+			actual.getDeclaredConstructor ( ).newInstance ( ) ;
+			fail ( "Created instance" ) ;
+		} catch ( InstantiationException ie ) {
+			caughtException = true ;
+		}
+		assertTrue ( caughtException, "We caught the instantiation exception indicating that the type is not concrete" ) ;
 	}
 
 	/*

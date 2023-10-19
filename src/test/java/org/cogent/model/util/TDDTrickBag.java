@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier ;
 import java.lang.reflect.Parameter ;
 import java.util.HashMap ;
 import java.util.Map ;
+import java.util.Objects ;
 import java.util.function.Function ;
 import java.util.random.RandomGenerator ;
 
@@ -68,6 +69,9 @@ public class TDDTrickBag {
 	}
 
 	private static <T> void setAllTheThings ( T t, Class <? super T> czz, SetterContext ctx, Map <SetterDesc, Function <SetterContext, Object>> generators ) {
+		if ( czz == null || Objects.equals ( Object.class, czz ) ) {
+			return ;
+		}
 		Method [ ] ms = czz.getDeclaredMethods ( ) ;
 		for ( Method m : ms ) {
 			if ( isSetter ( m ) ) {
@@ -86,6 +90,7 @@ public class TDDTrickBag {
 				}
 			}
 		}
+		setAllTheThings ( t, czz.getSuperclass ( ), ctx, generators ) ;
 	}
 
 	private static Function <SetterContext, Object> getSetterValueBuilder ( Parameter p, Map <SetterDesc, Function <SetterContext, Object>> generators ) {
