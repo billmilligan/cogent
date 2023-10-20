@@ -12,7 +12,7 @@ public class ImportStatement implements Writeable {
 
 	@Override
 	public void write ( PrintWriter pw, WriteContext wc ) {
-		pw.println ( "import " + name + " ;" ) ;
+		pw.println ( "import " + name + wc.endStatement ( ) ) ;
 	}
 
 	@Override

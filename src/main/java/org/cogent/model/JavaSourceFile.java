@@ -52,10 +52,15 @@ public class JavaSourceFile implements Writeable, JavaFileObject, FullyQualifiab
 			ctx.registerMessage ( SUBSEQUENT_CLASS, FAILURE, "Failed to validate class {0}", 1 ) ;
 			ctx.registerMessage ( FILE_NAME, CONTEXT, "Validate file name {0}", 1 ) ;
 			ctx.registerMessage ( FILE_NAME, FAILURE, "Failed to validate file name {0}", 1 ) ;
+			ctx.registerMessage ( NO_MAIN_CLASS, CONTEXT, "Validate file name {0}", 1 ) ;
 			ctx.registerMessage ( NO_MAIN_CLASS, FAILURE, "Failed to validate file name {0}", 1 ) ;
+			ctx.registerMessage ( MAIN_CLASS_WRONG_VISIBILITY, CONTEXT, "Validating main class in file has acceptable visibility (is currently {0})", 1 ) ;
 			ctx.registerMessage ( MAIN_CLASS_WRONG_VISIBILITY, FAILURE, "Main class in a file must be public or package protected but instead is {0}", 1 ) ;
+			ctx.registerMessage ( MAIN_CLASS_NOT_STATIC, CONTEXT, "Validating main class in file is not static", 0 ) ;
 			ctx.registerMessage ( MAIN_CLASS_NOT_STATIC, FAILURE, "Main class is static but should not be", 0 ) ;
+			ctx.registerMessage ( NOT_JAVA_FILE, CONTEXT, "Validating file extension on {1} should end in .java and has extension of {0}", 2 ) ;
 			ctx.registerMessage ( NOT_JAVA_FILE, FAILURE, "File name {1} does not end in .java but instead in {0}", 2 ) ;
+			ctx.registerMessage ( MAIN_CLASS_NOT_MATCHING_FILE, CONTEXT, "Validating file name {0} matches internal main class name of {1}", 2 ) ;
 			ctx.registerMessage ( MAIN_CLASS_NOT_MATCHING_FILE, FAILURE, "File name {0} does not match internal main class name of {1}", 2 ) ;
 		}
 	}

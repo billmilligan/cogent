@@ -4,6 +4,7 @@ import java.text.MessageFormat ;
 import java.util.Arrays ;
 import java.util.HashMap ;
 import java.util.Map ;
+import java.util.stream.Collectors ;
 
 public class MessageRegistry {
 
@@ -21,33 +22,28 @@ public class MessageRegistry {
 
 	public String format ( Code c, MessageTemplateType type, Object ... params ) {
 		MessageTemplate template = contents.get ( new MessageTemplateKey ( c, type ) ) ;
+		String [ ] quoted = quoteEach ( params ) ;
 		if ( template == null ) {
 			StringBuilder sb = new StringBuilder ( c.name ( ) ) ;
 			sb.append ( ":" ) ;
 			sb.append ( type ) ;
 			sb.append ( ":  " ) ;
-			boolean first = true ;
-			for ( Object o : params ) {
-				if ( first ) {
-					first = false ;
-				} else {
-					sb.append ( ", " ) ;
-				}
-				if ( o == null ) {
-					sb.append ( "null" ) ;
-				} else {
-					sb.append ( "\"" ) ;
-					sb.append ( o ) ;
-					sb.append ( "\"" ) ;
-				}
-			}
+			sb.append ( Arrays.asList ( quoted ).stream ( ).collect ( Collectors.joining ( ", " ) ) ) ;
 			return sb.toString ( ) ;
 		} else {
-			if ( template.paramCount != params.length ) {
+			if ( template.paramCount != quoted.length ) {
 				throw new IllegalArgumentException ( "Wrong number of pararms for message " + c + ":" + type + ".  Should be " + template.paramCount + " but was " + Arrays.asList ( params ) ) ;
 			}
-			return template.template.format ( params ) ;
+			return template.template.format ( quoted ) ;
 		}
+	}
+
+	private String [ ] quoteEach ( Object [ ] params ) {
+		return Arrays.asList ( params ).stream ( ).map ( s -> quote ( s ) ).toList ( ).toArray ( new String [ 0 ] ) ;
+	}
+
+	private String quote ( Object s ) {
+		return s == null ? "null" : ( "\"" + s + "\"" ) ;
 	}
 
 	private static record MessageTemplateKey ( Code code, MessageTemplateType type ) { ; }

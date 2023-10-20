@@ -5,6 +5,7 @@ import java.util.List ;
 
 import org.cogent.model.JavaSourceFile.SourceFileValidationMessages ;
 import org.cogent.validation.ValidationContext.NamingValidationMessages ;
+import org.cogent.validation.ValidationException.ValidationExceptionStarter ;
 
 public class Startup {
 
@@ -13,8 +14,9 @@ public class Startup {
 	private List <Starter> starters = new ArrayList <> ( ) ;
 
 	static {
+		setup.register ( new ValidationExceptionStarter ( ) ) ;
 		setup.register ( new NamingValidationMessages ( ) ) ;
-		setup.register ( new SourceFileValidationMessages ( ) );
+		setup.register ( new SourceFileValidationMessages ( ) ) ;
 		StarterContext ctx = new StarterContext ( ) ;
 		setup.go ( ctx ) ;
 	}

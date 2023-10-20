@@ -94,7 +94,7 @@ public class ValidationContext {
 		Tray current = context.peek ( ) ;
 		List <Object> stuff = new ArrayList <> ( Arrays.asList ( current.message ) ) ;
 		stuff.addAll ( Arrays.asList ( messages ) ) ;
-		fail ( current.code, stuff.toArray ( ) ) ;
+		addProblem ( new ValidationException ( current.code, stuff.toArray ( ), context, registry, assemble ( current.code, FAILURE, stuff.toArray ( ) ) , t ) ) ;
 	}
 
 	public void fail ( ValidationCode cd, Object ... messages ) {
@@ -102,7 +102,9 @@ public class ValidationContext {
 	}
 
 	public void fail ( ValidationCode cd, Throwable t, Object ... messages ) {
-		addProblem ( new ValidationException ( cd, context, registry, assemble ( cd, FAILURE, messages ) , t ) ) ;
+		pushContext ( cd, t, messages ) ;
+		addProblem ( new ValidationException ( cd, messages, context, registry, assemble ( cd, FAILURE, messages ) , t ) ) ;
+		popContext ( ) ;
 	}
 
 	private void addProblem ( ValidationException ve ) {

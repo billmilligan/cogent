@@ -16,7 +16,7 @@ public class JavaPackage implements Importable, Writeable, FullyQualifiable {
 
 	@Override
 	public void write ( PrintWriter pw, WriteContext wc ) {
-		pw.println ( "package " + getFullyQualifiedName ( ) + " ;") ;
+		pw.println ( "package " + getFullyQualifiedName ( ) + wc.endStatement ( ) ) ;
 	}
 
 	@Override

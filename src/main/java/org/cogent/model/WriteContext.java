@@ -31,4 +31,8 @@ public class WriteContext {
 		}
 		return sb.toString ( ) ;
 	}
+
+	public String endStatement ( ) {
+		return " ;" ;
+	}
 }

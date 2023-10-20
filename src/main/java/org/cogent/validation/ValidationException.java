@@ -7,25 +7,52 @@ import java.util.ArrayList ;
 import java.util.List ;
 
 import org.cogent.model.MessageRegistry ;
+import org.cogent.startup.Starter ;
+import org.cogent.startup.StarterContext ;
 import org.cogent.validation.ValidationContext.Tray ;
 
 import static org.cogent.validation.TemplateType.* ;
 
 public class ValidationException extends RuntimeException {
 
+	public static enum SystemValidationCode implements ValidationCode {
+		UNKNOWN
+	}
+	public static class ValidationExceptionStarter implements Starter {
+		@Override
+		public void start ( StarterContext ctx ) {
+			ctx.registerMessage ( SystemValidationCode.UNKNOWN, TemplateType.CONTEXT, "Unknown context", 0 ) ;
+			ctx.registerMessage ( SystemValidationCode.UNKNOWN, TemplateType.FAILURE, "Unknown error", 0 ) ;
+		}
+	}
+
+	public static ValidationCode codeOf ( Exception e ) {
+		if ( e instanceof ValidationException ve ) {
+			return ve.code ;
+		} else {
+			return SystemValidationCode.UNKNOWN ;
+		}
+	}
+
 	private static final long serialVersionUID = 4428956733871808677L ;
 	private List <Tray> context = new ArrayList <> ( ) ;
 	private ValidationCode code ;
 	private MessageRegistry reg ;
+	private Object [ ] params ;
 
-	public ValidationException ( ValidationCode cd, List <ValidationContext.Tray> context, MessageRegistry reg ) { this ( cd, context, reg, null, null ) ; }
-	public ValidationException ( ValidationCode cd, List <ValidationContext.Tray> context, MessageRegistry reg, String s ) { this ( cd, context, reg, s, null ) ; }
-	public ValidationException ( ValidationCode cd, List <ValidationContext.Tray> context, MessageRegistry reg, Throwable t ) { this ( cd, context, reg, null, t ) ; }
-	public ValidationException ( ValidationCode cd, List <ValidationContext.Tray> context, MessageRegistry reg, String s, Throwable t ) {
+	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg ) { this ( cd, params, context, reg, null, null ) ; }
+	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg, String s ) { this ( cd, params, context, reg, s, null ) ; }
+	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg, Throwable t ) { this ( cd, params, context, reg, null, t ) ; }
+	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg, String s, Throwable t ) {
 		super ( s, t ) ;
 		this.context.addAll ( context ) ;
 		this.code = cd ;
 		this.reg = reg ;
+		this.params = params ;
+	}
+
+	public Object [ ] getParams ( ) {
+		return params ;
 	}
 
 	public ValidationCode getCode ( ) {
