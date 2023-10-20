@@ -1,47 +1,62 @@
-package org.cogent.validation;
+package org.cogent.validation ;
 
+import java.util.ArrayList ;
+import java.util.Arrays ;
+import java.util.List ;
 import java.util.Stack ;
 
-import org.cogent.io.StringFactory ;
+import org.cogent.model.MessageRegistry ;
+import org.cogent.startup.Starter ;
+import org.cogent.startup.StarterContext ;
+
+import static org.cogent.validation.ValidationContext.NamingValidationCode.* ;
+import static org.cogent.validation.TemplateType.* ;
 
 public class ValidationContext {
 
-	private Stack <Tray> context = new Stack <> ( ) ;
+	public static enum NamingValidationCode implements ValidationCode {
+		JAVA_IDENTIFIER, BLANK_IDENTIFIER, STARTING_CHARACTER,
+		SUBSEQUENT_CHARACTER
+	}
 
-	public void contextualize ( Runnable r, Object ... ss ) {
-		pushContext ( ss ) ;
+	public static class NamingValidationMessages implements Starter {
+		@Override
+		public void start ( StarterContext ctx ) {
+			ctx.registerMessage ( JAVA_IDENTIFIER, CONTEXT, "Validating Name {0}", 1 ) ;
+			ctx.registerMessage ( JAVA_IDENTIFIER, FAILURE, "Failed to validate name {0}", 1 ) ;
+			ctx.registerMessage ( BLANK_IDENTIFIER, CONTEXT, "Validating Java identifier for blank", 0 ) ;
+			ctx.registerMessage ( BLANK_IDENTIFIER, FAILURE, "Null or blank is an invalid Java identifier", 0 ) ;
+			ctx.registerMessage ( STARTING_CHARACTER, CONTEXT, "Testing identifier starting character {0}", 1 ) ;
+			ctx.registerMessage ( STARTING_CHARACTER, FAILURE, "Invalid starting character {0}", 1 ) ;
+			ctx.registerMessage ( SUBSEQUENT_CHARACTER, CONTEXT, "Testing subsequent character at position {0}", 1 ) ;
+			ctx.registerMessage ( SUBSEQUENT_CHARACTER, FAILURE, "Invalid subsequent character {1} at position {0}", 2 ) ;
+		}
+	}
+
+	private Stack <Tray> context = new Stack <> ( ) ;
+	private List <ValidationException> problems = new ArrayList <> ( ) ; 
+	private MessageRegistry registry = MessageRegistry.INSTANCE ;
+
+	public void contextualize ( ValidationCode cd, Runnable r, Object ... ss ) {
+		pushContext ( cd, ss ) ;
 		r.run ( ) ;
 		popContext ( ) ;
 	}
 
-	public void pushContext ( Object ... ss ) {
-		context.push ( new Tray ( assemble ( ss ), null ) ) ;
+	public void pushContext ( ValidationCode cd, Object ... ss ) {
+		context.push ( new Tray ( cd, ss, null ) ) ;
 	}
 
-	public void pushContext ( Throwable t ) {
-		context.push ( new Tray ( null, t ) ) ;
+	public void pushContext ( ValidationCode cd, Throwable t ) {
+		context.push ( new Tray ( cd, null, t ) ) ;
 	}
 
-	public void pushContext ( Throwable t, Object ... ss ) {
-		context.push ( new Tray ( assemble ( ss ), t ) ) ;
+	public void pushContext ( ValidationCode cd, Throwable t, Object ... ss ) {
+		context.push ( new Tray ( cd, ss, t ) ) ;
 	}
 
-	private String assemble ( Object ... ss ) {
-		StringFactory sf = new StringFactory ( ) ;
-		boolean first = true ;
-		for ( Object s : ss ) {
-			if ( first ) {
-				first = false ;
-			} else {
-				sf.append ( ", " ) ;
-			}
-			sf.append ( s == null ? "null" : quote ( s ) ) ;
-		}
-		return sf.toString ( ) ;
-	}
-
-	private String quote ( Object s ) {
-		return "\"" + s + "\"" ;
+	private String assemble ( ValidationCode cd, TemplateType type, Object [ ] ss ) {
+		return registry.format ( cd, type, ss ) ;
 	}
 
 	public void popContext ( ) {
@@ -49,39 +64,64 @@ public class ValidationContext {
 	}
 
 	public void validateJavaIdentifier ( String name ) {
-		contextualize ( ( ) -> {
+		contextualize ( JAVA_IDENTIFIER, ( ) -> {
 			if ( name == null || name.isBlank ( ) ) {
-				fail ( "Null or blank is an invalid Java identifier" ) ;
+				fail ( BLANK_IDENTIFIER ) ;
 			} else {
 				char c = name.charAt ( 0 ) ;
-				contextualize ( ( ) -> {
+				contextualize ( STARTING_CHARACTER, ( ) -> {
 					if ( ! Character.isJavaIdentifierStart ( c ) ) {
-						fail ( "Invalid starting character" ) ;
+						failCurrentContext ( ) ;
 					}
-				}, "Validate first character", c ) ;
+				}, c ) ;
 				for ( int i = 1 ; i < name.length ( ) ; i++ ) {
 					char s = name.charAt ( i ) ;
-					contextualize ( ( ) -> {
+					contextualize ( SUBSEQUENT_CHARACTER, ( ) -> {
 						if ( ! Character.isJavaIdentifierPart ( s ) ) {
-							fail ( "Invalid subsequent character" ) ;
+							failCurrentContext ( s ) ;
 						}
-					}, "Validate subsequent character", i, s ) ;
+					}, i ) ;
 				}
 			}
-		}, "Validate Java Identifier", name ) ;
+		}, name ) ;
 	}
 
-	public void fail ( Object ... messages ) {
-		throw new ValidationException ( context, assemble ( messages ) ) ;
+	private void failCurrentContext ( Object ... messages ) {
+		failCurrentContext ( null, messages ) ;
 	}
 
-	public void fail ( Throwable t ) {
-		throw new ValidationException ( context, t ) ;
+	private void failCurrentContext ( Throwable t, Object ... messages ) {
+		Tray current = context.peek ( ) ;
+		List <Object> stuff = new ArrayList <> ( Arrays.asList ( current.message ) ) ;
+		stuff.addAll ( Arrays.asList ( messages ) ) ;
+		fail ( current.code, stuff.toArray ( ) ) ;
 	}
 
-	public void fail ( Throwable t, Object ... messages ) {
-		throw new ValidationException ( context, assemble ( messages ) , t ) ;
+	public void fail ( ValidationCode cd, Object ... messages ) {
+		fail ( cd, null, messages ) ;
 	}
 
-	public static record Tray ( String message, Throwable t ) { ; }
+	public void fail ( ValidationCode cd, Throwable t, Object ... messages ) {
+		addProblem ( new ValidationException ( cd, context, registry, assemble ( cd, FAILURE, messages ) , t ) ) ;
+	}
+
+	private void addProblem ( ValidationException ve ) {
+		try {
+			throw ve ; // get that stack trace
+		} catch ( ValidationException e ) {
+			problems.add ( e ) ;
+		}
+	}
+
+	public static record Tray ( ValidationCode code, Object [ ] message, Throwable t ) { ; }
+
+	public void airGrievances ( ) {
+		if ( problems.isEmpty ( ) ) {
+			return ;
+		} else if ( problems.size ( ) == 1 ) {
+			throw problems.get ( 0 ) ;
+		} else {
+			throw new MultiException ( problems ) ;
+		}
+	}
 }

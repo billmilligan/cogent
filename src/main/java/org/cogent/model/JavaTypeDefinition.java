@@ -37,6 +37,11 @@ public abstract class JavaTypeDefinition implements Importable, Writeable, Fully
 	public abstract Kind getKind ( ) ;
 
 	@Override
+	public String toString ( ) {
+		return getKind ( ) + " " + getFullyQualifiedName ( ) ;
+	}
+
+	@Override
 	public void validate ( ValidationContext ctx ) {
 		// TODO Auto-generated method stub
 		

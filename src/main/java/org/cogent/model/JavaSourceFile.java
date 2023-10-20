@@ -19,15 +19,46 @@ import javax.lang.model.element.NestingKind ;
 import javax.tools.JavaFileObject ;
 
 import org.cogent.io.SubsequentInputStream ;
+import org.cogent.startup.Starter ;
+import org.cogent.startup.StarterContext ;
 import org.cogent.validation.Validatable ;
+import org.cogent.validation.ValidationCode ;
 import org.cogent.validation.ValidationContext ;
 
 import lombok.Getter ;
 import lombok.Setter ;
 
+import static org.cogent.model.JavaSourceFile.SourceFileValidation.* ;
+import static org.cogent.validation.TemplateType.* ;
+
 @Getter
 @Setter
 public class JavaSourceFile implements Writeable, JavaFileObject, FullyQualifiable, Validatable {
+
+	public static enum SourceFileValidation implements ValidationCode {
+		SOURCE_FILE, MAIN_CLASS, SUBSEQUENT_CLASS, FILE_NAME, NO_MAIN_CLASS,
+		MAIN_CLASS_WRONG_VISIBILITY, MAIN_CLASS_NOT_STATIC, NOT_JAVA_FILE,
+		MAIN_CLASS_NOT_MATCHING_FILE
+	}
+
+	public static class SourceFileValidationMessages implements Starter {
+		@Override
+		public void start ( StarterContext ctx ) {
+			ctx.registerMessage ( SOURCE_FILE, CONTEXT, "Validating Source File {0}", 1 ) ;
+			ctx.registerMessage ( SOURCE_FILE, FAILURE, "Failed to validate source file {0}", 1 ) ;
+			ctx.registerMessage ( MAIN_CLASS, CONTEXT, "Validating Main Class {0} In File", 1 ) ;
+			ctx.registerMessage ( MAIN_CLASS, FAILURE, "Failed to validate class {0}", 1 ) ;
+			ctx.registerMessage ( SUBSEQUENT_CLASS, CONTEXT, "Validating Subsequent Class {0} In File", 1 ) ;
+			ctx.registerMessage ( SUBSEQUENT_CLASS, FAILURE, "Failed to validate class {0}", 1 ) ;
+			ctx.registerMessage ( FILE_NAME, CONTEXT, "Validate file name {0}", 1 ) ;
+			ctx.registerMessage ( FILE_NAME, FAILURE, "Failed to validate file name {0}", 1 ) ;
+			ctx.registerMessage ( NO_MAIN_CLASS, FAILURE, "Failed to validate file name {0}", 1 ) ;
+			ctx.registerMessage ( MAIN_CLASS_WRONG_VISIBILITY, FAILURE, "Main class in a file must be public or package protected but instead is {0}", 1 ) ;
+			ctx.registerMessage ( MAIN_CLASS_NOT_STATIC, FAILURE, "Main class is static but should not be", 0 ) ;
+			ctx.registerMessage ( NOT_JAVA_FILE, FAILURE, "File name {1} does not end in .java but instead in {0}", 2 ) ;
+			ctx.registerMessage ( MAIN_CLASS_NOT_MATCHING_FILE, FAILURE, "File name {0} does not match internal main class name of {1}", 2 ) ;
+		}
+	}
 
 	private String name ;
 	private JavaTypeDefinition mainClass ;
@@ -37,33 +68,56 @@ public class JavaSourceFile implements Writeable, JavaFileObject, FullyQualifiab
 		this.name = name ;
 	}
 
+	@Override
+	public String toString ( ) {
+		return "Java Source File: " + name ;
+	}
+
 	// 404-580-6265
 	@Override
 	public void validate ( ValidationContext ctx ) {
-		ctx.contextualize ( ( ) -> {
-			ctx.contextualize ( ( ) -> {
+		ctx.contextualize ( SOURCE_FILE, ( ) -> {
+			ctx.contextualize ( MAIN_CLASS, ( ) -> {
 				if ( mainClass == null ) {
-					ctx.fail ( "No main class present" ) ;
+					ctx.fail ( NO_MAIN_CLASS ) ;
 				}
 				mainClass.validate ( ctx ) ;
-			}, "Testing main class in file", mainClass ) ;
-			ctx.contextualize ( ( ) -> {
-				if ( ! name.endsWith ( ".java" ) ) {
-					ctx.fail ( "File name does not end in .java", name ) ;
+				VisibilityModifier mainVisibility = mainClass.getVisibility ( ) ;
+				if ( mainVisibility != VisibilityModifier.PUBLIC && mainVisibility != VisibilityModifier.PACKAGE_PROTECTED ) {
+					ctx.fail ( MAIN_CLASS_WRONG_VISIBILITY, mainVisibility ) ;
 				}
-				String fileSimpleName = name.substring ( 0, name.length ( ) - ".java".length ( ) ) ;
+				boolean mainClassIsStatic = mainClass.getModifiers ( ).contains ( TypeModifier.STATIC ) ;
+				if ( mainClassIsStatic ) {
+					ctx.fail ( MAIN_CLASS_NOT_STATIC ) ;
+				}
+			}, mainClass ) ;
+			ctx.contextualize ( FILE_NAME, ( ) -> {
+				String extension = extensionOf ( name ) ;
+				if ( ! extension.equals ( "java" ) ) {
+					ctx.fail ( NOT_JAVA_FILE, extension, name ) ;
+				}
+				String fileSimpleName = name.substring ( 0, name.length ( ) - extension.length ( ) - 1 ) ;
 				ctx.validateJavaIdentifier ( fileSimpleName ) ;
 				String className = mainClass.getSimpleName ( ) ;
 				if ( ! Objects.equals ( className, fileSimpleName ) ) {
-					ctx.fail ( "File name does not match internal main class name", name, className ) ;
+					ctx.fail ( MAIN_CLASS_NOT_MATCHING_FILE, name, className ) ;
 				}
-			}, "Validate file name", name ) ;
+			}, name ) ;
 			subsequentClasses.forEach ( c -> {
-				ctx.contextualize ( ( ) -> {
+				ctx.contextualize ( SUBSEQUENT_CLASS, ( ) -> {
 					c.validate ( ctx ) ;
-				}, "Testing subsequent class", c ) ;
+				}, c ) ;
 			} ) ;
-		}, "Validate Source File", this );
+		}, this );
+	}
+
+	private String extensionOf ( String name ) {
+		int pos = name.lastIndexOf ( '.' ) ;
+		if ( pos != -1 && pos != name.length ( ) - 1 ) {
+			return name.substring ( pos + 1 ) ;
+		} else {
+			return "" ;
+		}
 	}
 
 	@Override
@@ -101,6 +155,7 @@ public class JavaSourceFile implements Writeable, JavaFileObject, FullyQualifiab
 
 	@Override
 	public Reader openReader ( boolean ignoreEncodingErrors ) throws IOException {
+		validate ( ) ;
 		return new InputStreamReader ( openInputStream ( ) ) ;
 	}
 

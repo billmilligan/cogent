@@ -8,10 +8,10 @@ public enum VisibilityModifier {
 	@Override
 	public String toString ( ) {
 		switch ( this ) {
-			case PUBLIC: return "public" ;
-			case PROTECTED: return "protected" ;
-			case PRIVATE: return "private" ;
-			default:	return "" ;
+			case PUBLIC:
+			case PROTECTED:
+			case PRIVATE:	return name ( ).toLowerCase ( ) ;
+			default:		return "" ;
 		}
 	}
 }

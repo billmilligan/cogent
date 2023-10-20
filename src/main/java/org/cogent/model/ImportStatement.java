@@ -14,4 +14,9 @@ public class ImportStatement implements Writeable {
 	public void write ( PrintWriter pw, WriteContext wc ) {
 		pw.println ( "import " + name + " ;" ) ;
 	}
+
+	@Override
+	public String toString ( ) {
+		return "ImportStatement of " + name ;
+	}
 }

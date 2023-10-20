@@ -19,4 +19,9 @@ public class JavaTypeReference implements Writeable {
 			pw.write ( '>' ) ;
 		}
 	}
+
+	@Override
+	public String toString ( ) {
+		return "Type Reference to " + name ;
+	}
 }
