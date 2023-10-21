@@ -4,6 +4,8 @@ import java.io.PrintWriter ;
 import java.util.ArrayList ;
 import java.util.List ;
 
+import org.cogent.io.WriteContext ;
+
 public class JavaTypeReference implements Writeable {
 
 	private String name ;

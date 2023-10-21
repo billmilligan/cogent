@@ -6,7 +6,7 @@ import java.io.PrintWriter ;
 import java.util.ArrayList ;
 import java.util.List ;
 
-import org.cogent.model.MessageRegistry ;
+import org.cogent.messages.MessageRegistry ;
 import org.cogent.startup.Starter ;
 import org.cogent.startup.StarterContext ;
 import org.cogent.validation.ValidationContext.Tray ;
@@ -93,6 +93,7 @@ public class ValidationException extends RuntimeException {
 		}
 		pw.println ( indent + " ============ TRACE ( " + code + " ) ============ " ) ;
 		pw.println ( getMessage ( ) ) ;
+		pw.flush ( ) ;
 //		super.printStackTrace ( pw ) ;
     }
 }

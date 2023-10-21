@@ -1,8 +1,8 @@
 package org.cogent.startup;
 
-import org.cogent.model.Code ;
-import org.cogent.model.MessageRegistry ;
-import org.cogent.model.MessageTemplateType ;
+import org.cogent.messages.Code ;
+import org.cogent.messages.MessageRegistry ;
+import org.cogent.messages.MessageTemplateType ;
 
 public final class StarterContext {
 

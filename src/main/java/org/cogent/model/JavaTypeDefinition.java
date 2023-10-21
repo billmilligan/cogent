@@ -11,6 +11,7 @@ import java.util.Set ;
 import java.util.TreeSet ;
 
 import org.cogent.io.SubsequentInputStream ;
+import org.cogent.io.WriteContext ;
 import org.cogent.validation.Validatable ;
 import org.cogent.validation.ValidationContext ;
 

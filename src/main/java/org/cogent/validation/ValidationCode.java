@@ -1,6 +1,6 @@
 package org.cogent.validation;
 
-import org.cogent.model.Code ;
+import org.cogent.messages.Code ;
 import org.cogent.model.FullyQualifiable ;
 
 public interface ValidationCode extends FullyQualifiable, Code {

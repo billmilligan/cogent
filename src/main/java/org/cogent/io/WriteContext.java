@@ -1,4 +1,4 @@
-package org.cogent.model;
+package org.cogent.io;
 
 import java.util.HashMap ;
 import java.util.Map ;

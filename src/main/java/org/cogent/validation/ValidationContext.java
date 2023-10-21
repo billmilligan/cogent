@@ -5,7 +5,7 @@ import java.util.Arrays ;
 import java.util.List ;
 import java.util.Stack ;
 
-import org.cogent.model.MessageRegistry ;
+import org.cogent.messages.MessageRegistry ;
 import org.cogent.startup.Starter ;
 import org.cogent.startup.StarterContext ;
 
@@ -35,7 +35,19 @@ public class ValidationContext {
 
 	private Stack <Tray> context = new Stack <> ( ) ;
 	private List <ValidationException> problems = new ArrayList <> ( ) ; 
-	private MessageRegistry registry = MessageRegistry.INSTANCE ;
+	private MessageRegistry registry ;
+
+	protected ValidationContext ( MessageRegistry reg ) {
+		this.registry = reg ;
+	}
+
+	public static ValidationContext create ( ) {
+		return of ( MessageRegistry.INSTANCE ) ;
+	}
+
+	public static ValidationContext of ( MessageRegistry reg ) {
+		return new ValidationContext ( reg ) ;
+	}
 
 	public void contextualize ( ValidationCode cd, Runnable r, Object ... ss ) {
 		pushContext ( cd, ss ) ;
@@ -86,11 +98,11 @@ public class ValidationContext {
 		}, name ) ;
 	}
 
-	private void failCurrentContext ( Object ... messages ) {
+	public void failCurrentContext ( Object ... messages ) {
 		failCurrentContext ( null, messages ) ;
 	}
 
-	private void failCurrentContext ( Throwable t, Object ... messages ) {
+	public void failCurrentContext ( Throwable t, Object ... messages ) {
 		Tray current = context.peek ( ) ;
 		List <Object> stuff = new ArrayList <> ( Arrays.asList ( current.message ) ) ;
 		stuff.addAll ( Arrays.asList ( messages ) ) ;
@@ -102,7 +114,10 @@ public class ValidationContext {
 	}
 
 	public void fail ( ValidationCode cd, Throwable t, Object ... messages ) {
-		pushContext ( cd, t, messages ) ;
+		int cap = registry.messageCountFor ( cd, CONTEXT ) ;
+		Object [ ] contextMessages = new Object [ cap ] ;
+		System.arraycopy ( messages, 0, contextMessages, 0, cap ) ;
+		pushContext ( cd, t, contextMessages ) ;
 		addProblem ( new ValidationException ( cd, messages, context, registry, assemble ( cd, FAILURE, messages ) , t ) ) ;
 		popContext ( ) ;
 	}

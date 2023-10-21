@@ -6,6 +6,7 @@ import java.io.UncheckedIOException ;
 
 import org.cogent.io.PrintWriterSink ;
 import org.cogent.io.SupplierInputStream ;
+import org.cogent.io.WriteContext ;
 
 public interface Writeable {
 

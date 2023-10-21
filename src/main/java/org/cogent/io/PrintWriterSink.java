@@ -4,8 +4,6 @@ import java.io.PrintWriter ;
 import java.io.StringWriter ;
 import java.util.function.BiConsumer ;
 
-import org.cogent.model.WriteContext ;
-
 public class PrintWriterSink extends PrintWriter implements CharSequence {
 
 	private StringWriter sw ;

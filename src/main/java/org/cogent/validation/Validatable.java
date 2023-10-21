@@ -4,7 +4,7 @@ package org.cogent.validation;
 public interface Validatable {
 
 	public default void validate ( ) {
-		ValidationContext ctx = new ValidationContext ( ) ;
+		ValidationContext ctx = ValidationContext.create ( ) ;
 		validate ( ctx ) ;
 		ctx.airGrievances ( ) ;
 	}

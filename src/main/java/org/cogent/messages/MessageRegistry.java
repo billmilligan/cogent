@@ -1,4 +1,4 @@
-package org.cogent.model;
+package org.cogent.messages;
 
 import java.text.MessageFormat ;
 import java.util.Arrays ;
@@ -6,13 +6,20 @@ import java.util.HashMap ;
 import java.util.Map ;
 import java.util.stream.Collectors ;
 
+import org.cogent.validation.TemplateType ;
+import org.cogent.validation.ValidationCode ;
+
 public class MessageRegistry {
 
 	public static MessageRegistry INSTANCE = new MessageRegistry ( ) ;
 
 	private Map <MessageTemplateKey, MessageTemplate> contents = new HashMap <> ( ) ;
 
-	private MessageRegistry ( ) { ; }
+	protected MessageRegistry ( ) { ; }
+
+	public void clear ( ) {
+		contents.clear ( ) ;
+	}
 
 	public void register ( Code c, MessageTemplateType type, String template, int paramCount ) {
 		MessageTemplateKey k = new MessageTemplateKey ( c, type ) ;
@@ -21,7 +28,7 @@ public class MessageRegistry {
 	}
 
 	public String format ( Code c, MessageTemplateType type, Object ... params ) {
-		MessageTemplate template = contents.get ( new MessageTemplateKey ( c, type ) ) ;
+		MessageTemplate template = templateFor ( c, type ) ;
 		String [ ] quoted = quoteEach ( params ) ;
 		if ( template == null ) {
 			StringBuilder sb = new StringBuilder ( c.name ( ) ) ;
@@ -35,6 +42,24 @@ public class MessageRegistry {
 				throw new IllegalArgumentException ( "Wrong number of pararms for message " + c + ":" + type + ".  Should be " + template.paramCount + " but was " + Arrays.asList ( params ) ) ;
 			}
 			return template.template.format ( quoted ) ;
+		}
+	}
+
+	protected MessageTemplate templateFor ( Code c, MessageTemplateType type ) {
+		return contents.get ( new MessageTemplateKey ( c, type ) ) ;
+	}
+
+	public int messageCountFor ( ValidationCode cd, TemplateType context ) {
+		MessageTemplate mt = templateFor ( cd, context ) ;
+		return mt == null ? 0 : mt.paramCount ;
+	}
+
+	public MessageFormat formatFor ( Code c, MessageTemplateType type ) {
+		MessageTemplate mt = templateFor ( c, type ) ;
+		if ( mt == null ) {
+			return null ;
+		} else {
+			return mt.template ( ) ;
 		}
 	}
 

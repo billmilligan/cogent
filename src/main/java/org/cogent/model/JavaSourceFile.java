@@ -19,6 +19,7 @@ import javax.lang.model.element.NestingKind ;
 import javax.tools.JavaFileObject ;
 
 import org.cogent.io.SubsequentInputStream ;
+import org.cogent.io.WriteContext ;
 import org.cogent.startup.Starter ;
 import org.cogent.startup.StarterContext ;
 import org.cogent.validation.Validatable ;

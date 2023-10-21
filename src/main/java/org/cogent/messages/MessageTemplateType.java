@@ -1,4 +1,4 @@
-package org.cogent.model;
+package org.cogent.messages;
 
 
 public interface MessageTemplateType {

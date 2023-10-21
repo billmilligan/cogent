@@ -2,6 +2,8 @@ package org.cogent.model;
 
 import java.io.PrintWriter ;
 
+import org.cogent.io.WriteContext ;
+
 public class ImportStatement implements Writeable {
 
 	private String name ;

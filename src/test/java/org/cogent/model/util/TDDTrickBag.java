@@ -1,5 +1,7 @@
 package org.cogent.model.util;
 
+import static org.junit.jupiter.api.Assertions.assertTrue ;
+
 import java.lang.reflect.InvocationTargetException ;
 import java.lang.reflect.Method ;
 import java.lang.reflect.Modifier ;
@@ -17,6 +19,10 @@ public class TDDTrickBag {
 
 	private static Lorem randomWords = new LoremIpsum ( ) ;
 	private static RandomGenerator randomNums = RandomGenerator.getDefault ( ) ;
+
+	public static void assertContains ( String testee, String candidate ) {
+		assertTrue ( testee.contains ( candidate ) ) ;
+	}
 
 	public static int rollDice ( int min, int max ) {
 		return randomNums.nextInt ( min, max + 1 ) ;

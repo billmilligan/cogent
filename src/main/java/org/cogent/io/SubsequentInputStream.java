@@ -6,7 +6,6 @@ import java.util.LinkedList ;
 import java.util.Queue ;
 import java.util.function.Function ;
 
-import org.cogent.model.WriteContext ;
 import org.cogent.model.Writeable ;
 
 public class SubsequentInputStream extends InputStream {
