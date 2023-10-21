@@ -18,6 +18,7 @@ public class ValidationException extends RuntimeException {
 	public static enum SystemValidationCode implements ValidationCode {
 		UNKNOWN
 	}
+
 	public static class ValidationExceptionStarter implements Starter {
 		@Override
 		public void start ( StarterContext ctx ) {

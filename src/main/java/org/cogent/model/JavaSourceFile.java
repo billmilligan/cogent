@@ -52,8 +52,8 @@ public class JavaSourceFile implements Writeable, JavaFileObject, FullyQualifiab
 			ctx.registerMessage ( SUBSEQUENT_CLASS, FAILURE, "Failed to validate class {0}", 1 ) ;
 			ctx.registerMessage ( FILE_NAME, CONTEXT, "Validate file name {0}", 1 ) ;
 			ctx.registerMessage ( FILE_NAME, FAILURE, "Failed to validate file name {0}", 1 ) ;
-			ctx.registerMessage ( NO_MAIN_CLASS, CONTEXT, "Validate file name {0}", 1 ) ;
-			ctx.registerMessage ( NO_MAIN_CLASS, FAILURE, "Failed to validate file name {0}", 1 ) ;
+			ctx.registerMessage ( NO_MAIN_CLASS, CONTEXT, "Validate main class exists", 0 ) ;
+			ctx.registerMessage ( NO_MAIN_CLASS, FAILURE, "Failed to find main class", 0 ) ;
 			ctx.registerMessage ( MAIN_CLASS_WRONG_VISIBILITY, CONTEXT, "Validating main class in file has acceptable visibility (is currently {0})", 1 ) ;
 			ctx.registerMessage ( MAIN_CLASS_WRONG_VISIBILITY, FAILURE, "Main class in a file must be public or package protected but instead is {0}", 1 ) ;
 			ctx.registerMessage ( MAIN_CLASS_NOT_STATIC, CONTEXT, "Validating main class in file is not static", 0 ) ;
