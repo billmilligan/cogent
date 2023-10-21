@@ -11,6 +11,7 @@ import io.cucumber.java.en.Then ;
 import io.cucumber.java.en.When ;
 
 import java.io.StringWriter ;
+import java.lang.reflect.InvocationTargetException ;
 import java.lang.reflect.Modifier ;
 import java.nio.charset.Charset ;
 import java.util.ArrayList ;
@@ -19,6 +20,7 @@ import java.util.List ;
 import java.util.Locale ;
 import java.util.Set ;
 
+import javax.tools.Diagnostic ;
 import javax.tools.DiagnosticCollector ;
 import javax.tools.JavaCompiler ;
 import javax.tools.JavaCompiler.CompilationTask ;
@@ -121,16 +123,51 @@ public class SimpleJavaSteps {
 		OverridingJavaFileManager fm = new OverridingJavaFileManager ( compiler.getStandardFileManager ( diagnostics, Locale.US, Charset.defaultCharset ( ) ), cl ) ;
 		fm.addSource ( jf ) ;
 		StringWriter sw = new HairTriggerStringWriter ( ) ;
-		CompilationTask task = compiler.getTask ( sw, fm, diagnostics, List.of ( ), List.of ( ), List.of ( jf ) ) ;
+		CompilationTask task = compiler.getTask ( sw, fm, diagnostics, List.of ( "--target=17" ), List.of ( ), List.of ( jf ) ) ;
 		boolean called = task.call ( ) ;
 		String fatalErrors = sw.toString ( ) ;
 		assertTrue ( called, "Successfully called compile" ) ;
 		assertEquals ( "", fatalErrors, "No fatal errors" ) ;
+		if ( ! diagnostics.getDiagnostics ( ).isEmpty ( ) ) {
+			diagnostics.getDiagnostics ( ).forEach ( d -> {
+				StringBuilder sb = new StringBuilder ( ) ;
+				sb.append ( "Diagnostic Issue" ) ;
+				logg ( d, "Message", d.getMessage ( Locale.US ), sb ) ;
+				logg ( d, "Source", sb ) ;
+				logg ( d, "Kind", sb ) ;
+				logg ( d, "Code", sb ) ;
+				logg ( d, "LineNumber", sb ) ;
+				logg ( d, "ColumnNumber", sb ) ;
+				logg ( d, "Position", sb ) ;
+				logg ( d, "StartPosition", sb ) ;
+				logg ( d, "EndPosition", sb ) ;
+				System.out.println ( sb ) ;
+			} );
+		}
 		assertTrue ( diagnostics.getDiagnostics ( ).isEmpty ( ), "No problems of any kind" ) ;
 
 		Class <?> actual = cl.loadClass ( jf.getMainClass ( ).getFullyQualifiedName ( ) ) ;
 		assertNotNull ( actual, "Class found!" ) ;
 		scope.set ( ACTUAL_CLASS, actual ) ;
+	}
+
+	private void logg ( Diagnostic <? extends JavaFileObject> d, String property, String value, StringBuilder sb ) {
+		sb.append ( System.getProperty ( "line.separator" ) ) ;
+		sb.append ( "\t" ) ;
+		sb.append ( property ) ;
+		sb.append ( ":  \"" ) ;
+		sb.append ( value ) ;
+		sb.append ( ":  \"" ) ;
+		
+	}
+
+	private void logg ( Diagnostic <? extends JavaFileObject> d, String property, StringBuilder sb ) {
+		try {
+			String value = String.valueOf ( d.getClass ( ).getMethod ( "get" + property ).invoke ( d ) ) ;
+			logg ( d, property, value, sb ) ;
+		} catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e ) {
+			logg ( d, property, String.valueOf ( e ), sb ) ;
+		}
 	}
 
 	@Then ( "the class will have the expected name" )

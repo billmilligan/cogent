@@ -22,7 +22,7 @@ import static org.cogent.validation.ValidationException.SystemValidationCode.* ;
 import static org.cogent.validation.ValidationContext.NamingValidationCode.* ;
 
 @SuppressWarnings ( "unused" )
-public class CogentPlayground {
+public class ValidationPlaygroundTest {
 
 	@BeforeEach
 	public void setup ( ) {
@@ -43,10 +43,10 @@ public class CogentPlayground {
 		assertCorrectSingleValidationProblem ( issues, STARTING_CHARACTER, "1" ) ;
 		assertCorrectSingleValidationProblem ( issues, MAIN_CLASS_NOT_MATCHING_FILE, "123!4#.jarva", "A1234" ) ;
 
-		List <ValidationException> subsequentCharacterProblems = assertMultipleValidationProblems ( issues, SUBSEQUENT_CHARACTER ) ; // "3", "!" ) ;
-		assertEquals ( 2, subsequentCharacterProblems.size ( ), "Correct number of subsequent problems" ) ;
-		assertCorrectSingleValidationProblem ( subsequentCharacterProblems.get ( 0 ), "3", "!" ) ;
-		assertCorrectSingleValidationProblem ( subsequentCharacterProblems.get ( 1 ), "5", "#" ) ;
+		List <ValidationException> nextCharProblems = assertMultipleValidationProblems ( issues, SUBSEQUENT_CHARACTER ) ; // "3", "!" ) ;
+		assertEquals ( 2, nextCharProblems.size ( ), "Correct number of subsequent problems" ) ;
+		assertCorrectSingleValidationProblem ( nextCharProblems.get ( 0 ), "3", "!" ) ;
+		assertCorrectSingleValidationProblem ( nextCharProblems.get ( 1 ), "5", "#" ) ;
 	}
 
 	private int sizeof ( Map <ValidationCode, List <Exception>> issues ) {
