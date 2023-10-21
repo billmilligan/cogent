@@ -24,6 +24,8 @@ import static org.cogent.validation.ValidationContext.NamingValidationCode.* ;
 @SuppressWarnings ( "unused" )
 public class ValidationPlaygroundTest {
 
+	private static final boolean BARF = false ;
+
 	@BeforeEach
 	public void setup ( ) {
 		Startup.init ( ) ;
@@ -43,7 +45,7 @@ public class ValidationPlaygroundTest {
 		assertCorrectSingleValidationProblem ( issues, STARTING_CHARACTER, "1" ) ;
 		assertCorrectSingleValidationProblem ( issues, MAIN_CLASS_NOT_MATCHING_FILE, "123!4#.jarva", "A1234" ) ;
 
-		List <ValidationException> nextCharProblems = assertMultipleValidationProblems ( issues, SUBSEQUENT_CHARACTER ) ; // "3", "!" ) ;
+		List <ValidationException> nextCharProblems = assertMultipleValidationProblems ( issues, SUBSEQUENT_CHARACTER ) ;
 		assertEquals ( 2, nextCharProblems.size ( ), "Correct number of subsequent problems" ) ;
 		assertCorrectSingleValidationProblem ( nextCharProblems.get ( 0 ), "3", "!" ) ;
 		assertCorrectSingleValidationProblem ( nextCharProblems.get ( 1 ), "5", "#" ) ;
@@ -65,7 +67,11 @@ public class ValidationPlaygroundTest {
 		assertTrue ( caughtValidation, "Caught correct exception type" ) ;
 		Map <ValidationCode, List <Exception>> issues = caught.getContents ( ).stream ( ).collect ( Collectors.toMap (
 				ValidationException::codeOf, x -> List.of ( x ), ( y, z ) -> combine ( y, z ) ) ) ;
-		return issues ;
+		if ( BARF ) {
+			throw caught ;
+		} else {
+			return issues ;
+		}
 	}
 
 	private void assertCorrectSingleValidationProblem ( Map <ValidationCode, List <Exception>> issues, ValidationCode problem, String ... problemDetail ) {

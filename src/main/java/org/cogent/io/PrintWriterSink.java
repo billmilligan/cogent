@@ -22,6 +22,10 @@ public class PrintWriterSink extends PrintWriter implements CharSequence {
 		return contents ;
 	}
 
+	public void reset ( ) {
+		contented = false ;
+	}
+
 	private void ensureContents ( ) {
 		if ( ! contented ) {
 			contents = sw.toString ( ) ;
