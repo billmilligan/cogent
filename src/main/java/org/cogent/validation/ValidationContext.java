@@ -59,10 +59,6 @@ public class ValidationContext {
 		context.push ( new Tray ( cd, ss, null ) ) ;
 	}
 
-	public void pushContext ( ValidationCode cd, Throwable t ) {
-		context.push ( new Tray ( cd, null, t ) ) ;
-	}
-
 	public void pushContext ( ValidationCode cd, Throwable t, Object ... ss ) {
 		context.push ( new Tray ( cd, ss, t ) ) ;
 	}

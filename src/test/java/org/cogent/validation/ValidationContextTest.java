@@ -29,6 +29,8 @@ public class ValidationContextTest {
 	public void testBasics ( ) throws Exception {
 		ValidationContext ctx = ValidationContext.of ( reg ) ;
 		ctx.pushContext ( FOO, "P0", "P1" ) ;
+		ctx.airGrievances ( ) ;
+		// Still here!
 		ctx.failCurrentContext ( "P2" ) ;
 		try {
 			ctx.airGrievances ( ) ;
