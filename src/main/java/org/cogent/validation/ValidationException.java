@@ -77,15 +77,14 @@ public class ValidationException extends RuntimeException {
 		pw.println ( indent + " ============ CONTEXT ============ " ) ;
 		for ( int i = 0 ; i < context.size ( ) ; i++ ) {
 			Tray t = context.get ( i ) ;
+			// we can be assured that message is non-null, here
 			String message = reg.format ( t.code ( ), CONTEXT, t.message ( ) ) ;
 			Throwable throwable = t.t ( ) ;
-			if ( message != null ) {
-				pw.print ( indent ) ;
-				for ( int j = 0 ; j < i ; j++ ) {
-					pw.print ( " " ) ;
-				}
-				pw.println ( message ) ;
+			pw.print ( indent ) ;
+			for ( int j = 0 ; j < i ; j++ ) {
+				pw.print ( " " ) ;
 			}
+			pw.println ( message ) ;
 			if ( throwable != null ) {
 				pw.println ( indent + indent + "======== INLINE EXCEPTION ======== " ) ;
 				throwable.printStackTrace ( pw ) ;
