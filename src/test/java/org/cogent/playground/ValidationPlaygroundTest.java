@@ -1,4 +1,4 @@
-package org.cogent.model.playground;
+package org.cogent.playground;
 
 import java.util.ArrayList ;
 import java.util.HashMap ;

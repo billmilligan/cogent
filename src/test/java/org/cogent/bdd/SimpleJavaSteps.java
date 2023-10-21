@@ -1,10 +1,15 @@
-package org.cogent.model;
+package org.cogent.bdd;
 
-import org.cogent.model.compilertools.BabyClassLoader ;
-import org.cogent.model.compilertools.OverridingJavaFileManager ;
+import org.cogent.model.JavaClassDefinition ;
+import org.cogent.model.JavaSourceFile ;
+import org.cogent.model.JavaTypeDefinition ;
+import org.cogent.model.TypeModifier ;
+import org.cogent.model.VisibilityModifier ;
 import org.cogent.model.util.JavaIdentifierTrickBag ;
 import org.cogent.model.util.NarrativeScope ;
 import org.cogent.model.util.StrongKey ;
+import org.cogent.util.compilertools.BabyClassLoader ;
+import org.cogent.util.compilertools.OverridingJavaFileManager ;
 
 import io.cucumber.java.After ;
 import io.cucumber.java.en.Then ;
@@ -27,7 +32,7 @@ import javax.tools.JavaCompiler.CompilationTask ;
 import javax.tools.JavaFileObject ;
 import javax.tools.ToolProvider ;
 
-import static org.cogent.model.SimpleJavaSteps.Key.* ;
+import static org.cogent.bdd.SimpleJavaSteps.Key.* ;
 import static org.junit.jupiter.api.Assertions.* ;
 
 public class SimpleJavaSteps {

@@ -1,4 +1,4 @@
-package org.cogent.model.compilertools;
+package org.cogent.util.compilertools;
 
 import java.io.ByteArrayOutputStream ;
 import java.io.IOException ;

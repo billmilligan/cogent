@@ -1,4 +1,4 @@
-package org.cogent.model;
+package org.cogent.bdd;
 
 import org.junit.platform.suite.api.ConfigurationParameter ;
 import org.junit.platform.suite.api.IncludeEngines ;
