@@ -5,9 +5,9 @@ import org.cogent.model.JavaSourceFile ;
 import org.cogent.model.JavaTypeDefinition ;
 import org.cogent.model.TypeModifier ;
 import org.cogent.model.VisibilityModifier ;
-import org.cogent.model.util.JavaIdentifierTrickBag ;
-import org.cogent.model.util.NarrativeScope ;
-import org.cogent.model.util.StrongKey ;
+import org.cogent.util.JavaIdentifierTrickBag ;
+import org.cogent.util.NarrativeScope ;
+import org.cogent.util.StrongKey ;
 import org.cogent.util.compilertools.BabyClassLoader ;
 import org.cogent.util.compilertools.OverridingJavaFileManager ;
 

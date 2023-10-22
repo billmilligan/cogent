@@ -5,7 +5,7 @@ import org.cogent.messages.MessageRegistry ;
 import org.junit.jupiter.api.AfterEach ;
 import org.junit.jupiter.api.Test ;
 
-import static org.cogent.model.util.TDDTrickBag.* ;
+import static org.cogent.util.TDDTrickBag.* ;
 import static org.cogent.validation.TemplateType.* ;
 import static org.cogent.validation.ValidationException.SystemValidationCode.* ;
 import static org.cogent.validation.ValidationExceptionTest.TestKey.* ;

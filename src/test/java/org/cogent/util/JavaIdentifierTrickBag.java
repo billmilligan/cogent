@@ -1,6 +1,6 @@
-package org.cogent.model.util ;
+package org.cogent.util ;
 
-import static org.cogent.model.util.TDDTrickBag.* ;
+import static org.cogent.util.TDDTrickBag.* ;
 
 public class JavaIdentifierTrickBag {
 

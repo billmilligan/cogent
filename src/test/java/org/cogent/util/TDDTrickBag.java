@@ -1,4 +1,4 @@
-package org.cogent.model.util;
+package org.cogent.util;
 
 import static org.junit.jupiter.api.Assertions.* ;
 

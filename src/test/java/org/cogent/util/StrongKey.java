@@ -1,4 +1,4 @@
-package org.cogent.model.util;
+package org.cogent.util;
 
 /**
  * VariableKey is used in VariableScope to avoid fatfingered keys.  It

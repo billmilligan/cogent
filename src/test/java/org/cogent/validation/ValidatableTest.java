@@ -1,8 +1,8 @@
 package org.cogent.validation;
 
-import org.junit.jupiter.api.Test ;
+import static org.cogent.util.TDDTrickBag.* ;
 
-import static org.cogent.model.util.TDDTrickBag.* ;
+import org.junit.jupiter.api.Test ;
 
 public class ValidatableTest {
 

@@ -8,14 +8,36 @@ import org.cogent.io.SupplierInputStream ;
 import org.cogent.io.WriteContext ;
 
 import lombok.Getter ;
-import lombok.Setter ;
 
 @Getter
-@Setter
 public class JavaPackage implements Importable, Writeable, FullyQualifiable {
 
 	private JavaPackage parent ;
 	private String name ;
+
+	public JavaPackage ( String name ) {
+		this ( null, name ) ;
+	}
+
+	public JavaPackage ( JavaPackage parent, String name ) {
+		this.parent = parent ;
+		this.name = name ;
+	}
+
+	public static JavaPackage packageOf ( String name, SourceClassRegistry reg ) {
+		if ( reg.containsPackage ( name ) ) {
+			return reg.getPackage ( name ) ;
+		} else {
+			if ( name.contains ( "." ) ) {
+				String parentPart = name.substring ( 0, name.lastIndexOf ( '.' ) ) ;
+				JavaPackage parent = packageOf ( parentPart, reg ) ;
+				JavaPackage retVal = new JavaPackage ( parent, name.substring ( name.lastIndexOf ( '.' ) + 1 ) ) ;
+				return reg.registerPackage ( name, retVal ) ;
+			} else {
+				return reg.registerPackage ( name, new JavaPackage ( name ) ) ;
+			}
+		}
+	}
 
 	@Override
 	public void write ( PrintWriter pw, WriteContext wc ) {

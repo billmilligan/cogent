@@ -10,7 +10,7 @@ import org.cogent.messages.MessageRegistry ;
 import org.cogent.validation.ValidationContext.Tray ;
 
 import static java.util.Arrays.* ;
-import static org.cogent.model.util.TDDTrickBag.* ;
+import static org.cogent.util.TDDTrickBag.* ;
 import static org.cogent.validation.TemplateType.* ;
 import static org.cogent.validation.ValidationContext.NamingValidationCode.* ;
 import static org.cogent.validation.ValidationContextTest.TestKey.* ;

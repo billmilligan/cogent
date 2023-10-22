@@ -6,7 +6,7 @@ import org.cogent.io.PrintWriterSink ;
 import org.cogent.messages.MessageRegistry ;
 import org.junit.jupiter.api.AfterEach ;
 
-import static org.cogent.model.util.TDDTrickBag.* ;
+import static org.cogent.util.TDDTrickBag.* ;
 import static org.cogent.validation.MultiExceptionTest.TestKey.* ;
 import static org.cogent.validation.TemplateType.* ;
 import static org.junit.jupiter.api.Assertions.* ;

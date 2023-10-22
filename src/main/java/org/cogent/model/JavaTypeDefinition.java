@@ -24,6 +24,7 @@ public abstract class JavaTypeDefinition implements Importable, Writeable, Fully
 	protected Optional <JavaPackage> pkg = Optional.empty ( ) ;
 	protected List <Importable> imports = new ArrayList <> ( ) ;
 	protected List <Comment> topLevelComments = new ArrayList <> ( ) ;
+	protected List <JavaAnnotationReference> annotations = new ArrayList <> ( ) ;
 	protected VisibilityModifier visibility ;
 	protected String simpleName ;
 	protected Set <TypeModifier> modifiers = new TreeSet <> ( ) ;
