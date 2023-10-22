@@ -1,5 +1,4 @@
 package org.cogent.model;
-
 import java.io.IOException ;
 import java.io.InputStream ;
 import java.io.PrintWriter ;
@@ -15,9 +14,11 @@ import org.cogent.io.WriteContext ;
 import org.cogent.validation.Validatable ;
 import org.cogent.validation.ValidationContext ;
 
-import lombok.Data ;
+import lombok.Getter ;
+import lombok.Setter ;
 
-@Data
+@Getter
+@Setter
 public abstract class JavaTypeDefinition implements Importable, Writeable, FullyQualifiable, Validatable {
 
 	protected Optional <JavaPackage> pkg = Optional.empty ( ) ;
@@ -53,38 +54,38 @@ public abstract class JavaTypeDefinition implements Importable, Writeable, Fully
 		return new SubsequentInputStream ( ) {{
 			pkg.ifPresent ( p -> add ( p, wc ) ) ;
 			if ( pkg.isPresent ( ) ) {
-				addln ( "", "Blank 1" ) ;
+				addln ( "" ) ;
 			}
 			imports.forEach ( p -> add ( p, wc ) ) ;
 			if ( ! imports.isEmpty ( ) ) {
-				addln ( "", "Blank 2" ) ;
+				addln ( "" ) ;
 			}
 			topLevelComments.forEach ( p -> add ( p, wc ) ) ;
-			add ( visibility.toString ( ), "Visibility on " + simpleName ) ;
-			modifiers.forEach ( p -> add ( " " + p.toString ( ), "Modifier on " + simpleName ) ) ;
-			add ( " ", "Blank 3" ) ;
-			add ( getKind ( ).toString ( ), "Kind on " + simpleName ) ;
-			add ( " ", "Blank 4" ) ;
-			add ( simpleName, "Name of " + simpleName ) ;
+			add ( visibility.toString ( ) ) ;
+			modifiers.forEach ( p -> add ( " " + p.toString ( ) ) ) ;
+			add ( " " ) ;
+			add ( getKind ( ).toString ( ) ) ;
+			add ( " " ) ;
+			add ( simpleName ) ;
 			superClass.ifPresent ( p -> {
-				add ( " extends ", "Extends of " + simpleName ) ;
+				add ( " extends " ) ;
 				add ( p, wc ) ;
 			} ) ;
 			if ( ! implementsTypes.isEmpty ( ) ) {
-				add ( " ", "Blank 5" ) ;
+				add ( " " ) ;
 				boolean first = true ;
 				for ( JavaTypeReference ref : implementsTypes ) {
 					if ( ! first ) {
-						add ( ", ", "Interface separator" ) ;
+						add ( ", " ) ;
 					} else {
 						first = true ;
 					}
 					add ( ref, wc ) ;
 				}
 			}
-			addln ( " {", "Begin class for " + simpleName ) ;
+			addln ( " {" ) ;
 			contents.forEach ( p -> add ( p, wc ) ) ;
-			addln ( "}", "End class for " + simpleName ) ;
+			addln ( "}" ) ;
 		}} ;
 	}
 

@@ -1,6 +1,6 @@
 package org.cogent.model.util;
 
-import static org.junit.jupiter.api.Assertions.assertTrue ;
+import static org.junit.jupiter.api.Assertions.* ;
 
 import java.lang.reflect.InvocationTargetException ;
 import java.lang.reflect.Method ;
@@ -22,6 +22,10 @@ public class TDDTrickBag {
 
 	public static void assertContains ( String testee, String candidate ) {
 		assertTrue ( testee.contains ( candidate ) ) ;
+	}
+
+	public static void assertNotContains ( String testee, String candidate ) {
+		assertFalse ( testee.contains ( candidate ) ) ;
 	}
 
 	public static int rollDice ( int min, int max ) {

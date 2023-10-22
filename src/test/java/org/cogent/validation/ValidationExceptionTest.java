@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach ;
 import org.junit.jupiter.api.Test ;
 
 import static org.cogent.model.util.TDDTrickBag.* ;
+import static org.cogent.validation.TemplateType.* ;
 import static org.cogent.validation.ValidationException.SystemValidationCode.* ;
 import static org.cogent.validation.ValidationExceptionTest.TestKey.* ;
 import static org.junit.jupiter.api.Assertions.* ;
@@ -25,7 +26,10 @@ public class ValidationExceptionTest {
 		FOO, BAR, BAZ, QUUX
 	}
 
-	private MessageRegistry reg = new MessageRegistry ( ) { ; } ;
+	private MessageRegistry reg = new MessageRegistry ( ) {{
+		this.register ( FOO, CONTEXT, "Ababba", 0 ) ;
+		this.register ( FOO, FAILURE, "Zzyzzx", 0 ) ;
+	}} ;
 
 	@AfterEach
 	public void reset ( ) {
@@ -81,5 +85,48 @@ public class ValidationExceptionTest {
 		Exception s = buildTrace ( new IllegalStateException ( "Franklin" ) ) ;
 		assertEquals ( FOO, ValidationException.codeOf ( t ) ) ;
 		assertEquals ( UNKNOWN, ValidationException.codeOf ( s ) ) ;
+	}
+
+	@Test
+	public void testContainedException ( ) throws Exception {
+		ValidationContext ctx = ValidationContext.of ( reg ) ;
+		ctx.pushContext ( FOO, new IllegalArgumentException ( "Fallacies!" ) ) ;
+		ctx.failCurrentContext ( ) ;
+		try {
+			ctx.airGrievances ( ) ;
+		} catch ( ValidationException t ) {
+			PrintWriterSink sink = new PrintWriterSink ( ) ;
+			t.printStackTrace ( sink ) ;
+			String actual = String.valueOf ( sink ) ;
+			assertNotNull ( actual ) ;
+			assertContains ( actual, "CONTEXT" ) ;
+			assertContains ( actual, "TRACE" ) ;
+			assertContains ( actual, "FOO" ) ;
+			assertContains ( actual, "Fallacies!" ) ;
+			assertEquals ( FOO, t.getCode ( ) ) ;
+		}
+	}
+
+	@Test
+	public void testNestedException ( ) throws Exception {
+		ValidationContext ctx = ValidationContext.of ( reg ) ;
+		ctx.pushContext ( FOO ) ;
+		ctx.failCurrentContext ( new IllegalArgumentException ( "Fallacies!" ) ) ;
+		try {
+			ctx.airGrievances ( ) ;
+		} catch ( ValidationException t ) {
+			PrintWriterSink sink = new PrintWriterSink ( ) ;
+			t.printStackTrace ( sink ) ;
+			String actual = String.valueOf ( sink ) ;
+			assertNotNull ( actual ) ;
+			assertContains ( actual, "CONTEXT" ) ;
+			assertContains ( actual, "TRACE" ) ;
+			assertContains ( actual, "FOO" ) ;
+			assertEquals ( FOO, t.getCode ( ) ) ;
+			assertNotNull ( t.getCause ( ) ) ;
+			Throwable cause = t.getCause ( ) ;
+			assertTrue ( cause instanceof IllegalArgumentException ) ;
+			assertContains ( cause.getMessage ( ), "Fallacies!" ) ;
+		}
 	}
 }

@@ -25,13 +25,13 @@ public class SubsequentInputStream extends InputStream {
 		substreams.add ( new Streamer <> ( w, q -> q.openInputStream ( wc ) ) ) ;
 	}
 
-	public void add ( CharSequence cs, String name ) {
-		substreams.add ( new Streamer <> ( cs, q -> new SimpleInputStream ( cs, name ) ) ) ;
+	public void add ( CharSequence cs ) {
+		substreams.add ( new Streamer <> ( cs, q -> new SimpleInputStream ( cs ) ) ) ;
 	}
 
-	public void addln ( CharSequence cs, String name ) {
-		add ( cs, name ) ;
-		add ( System.getProperty ( "line.separator" ), name ) ;
+	public void addln ( CharSequence cs ) {
+		add ( cs ) ;
+		add ( System.getProperty ( "line.separator" ) ) ;
 	}
 
 	@Override

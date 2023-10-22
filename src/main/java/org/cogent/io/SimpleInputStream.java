@@ -7,24 +7,18 @@ public class SimpleInputStream extends InputStream {
 
 	private CharSequence seq ;
 	private int index ;
-	private String name ;
 
-	public SimpleInputStream ( CharSequence seq, String name ) {
+	public SimpleInputStream ( CharSequence seq ) {
 		this.seq = seq ;
 		this.index = 0 ;
-		this.name = name ;
 	}
 
 	@Override
 	public int read ( ) throws IOException {
-		try {
-			if ( this.index >= seq.length ( ) ) {
-				return -1 ;
-			} else {
-				return seq.charAt ( index++ ) ;
-			}
-		} catch ( RuntimeException re ) {
-			throw new IOException ( "Failed read on " + name, re ) ;
+		if ( this.index >= seq.length ( ) ) {
+			return -1 ;
+		} else {
+			return seq.charAt ( index++ ) ;
 		}
 	}
 }

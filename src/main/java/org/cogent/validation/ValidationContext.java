@@ -71,6 +71,10 @@ public class ValidationContext {
 		context.pop ( ) ;
 	}
 
+	public boolean canPop ( ) {
+		return ! context.isEmpty ( ) ;
+	}
+
 	public void validateJavaIdentifier ( String name ) {
 		contextualize ( JAVA_IDENTIFIER, ( ) -> {
 			if ( name == null || name.isBlank ( ) ) {
@@ -126,15 +130,19 @@ public class ValidationContext {
 		}
 	}
 
-	public static record Tray ( ValidationCode code, Object [ ] message, Throwable t ) { ; }
+	public static record Tray ( ValidationCode code, Object [ ] message, Throwable throwable ) { ; }
 
 	public void airGrievances ( ) {
-		if ( problems.isEmpty ( ) ) {
-			return ;
-		} else if ( problems.size ( ) == 1 ) {
-			throw problems.get ( 0 ) ;
-		} else {
-			throw new MultiException ( problems ) ;
+		try {
+			if ( problems.isEmpty ( ) ) {
+				return ;
+			} else if ( problems.size ( ) == 1 ) {
+				throw problems.get ( 0 ) ;
+			} else {
+				throw new MultiException ( new ArrayList <> ( problems ) ) ;
+			}
+		} finally {
+			problems.clear ( ) ;
 		}
 	}
 }

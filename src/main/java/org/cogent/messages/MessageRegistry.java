@@ -39,7 +39,7 @@ public class MessageRegistry {
 			return sb.toString ( ) ;
 		} else {
 			if ( template.paramCount != quoted.length ) {
-				throw new IllegalArgumentException ( "Wrong number of pararms for message " + c + ":" + type + ".  Should be " + template.paramCount + " but was " + Arrays.asList ( params ) ) ;
+				throw new IllegalArgumentException ( "Wrong number of params for message " + c + ":" + type + ".  Should be " + template.paramCount + " but was " + Arrays.asList ( params ) ) ;
 			}
 			return template.template.format ( quoted ) ;
 		}

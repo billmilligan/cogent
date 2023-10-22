@@ -8,8 +8,11 @@ import org.cogent.io.SupplierInputStream ;
 import org.cogent.io.WriteContext ;
 
 import lombok.Data ;
+import lombok.Getter ;
+import lombok.Setter ;
 
-@Data
+@Getter
+@Setter
 public class JavaPackage implements Importable, Writeable, FullyQualifiable {
 
 	private JavaPackage parent ;

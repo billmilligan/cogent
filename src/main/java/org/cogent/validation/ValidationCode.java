@@ -13,9 +13,6 @@ public interface ValidationCode extends FullyQualifiable, Code {
 
 	public default String getFullyQualifiedName ( ) {
 		String fqn = getClass ( ).getSimpleName ( ) ;
-		if ( fqn.indexOf ( '$' ) != -1 ) {
-			fqn = fqn.substring ( fqn.indexOf ( '$' ) + 1 ) ;
-		}
 		return fqn + ":" + name ( ) ;
 	}
 }

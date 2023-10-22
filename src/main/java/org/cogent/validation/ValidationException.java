@@ -42,8 +42,6 @@ public class ValidationException extends RuntimeException {
 	private Object [ ] params ;
 
 	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg ) { this ( cd, params, context, reg, null, null ) ; }
-	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg, String s ) { this ( cd, params, context, reg, s, null ) ; }
-	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg, Throwable t ) { this ( cd, params, context, reg, null, t ) ; }
 	public ValidationException ( ValidationCode cd, Object [ ] params, List <ValidationContext.Tray> context, MessageRegistry reg, String s, Throwable t ) {
 		super ( s, t ) ;
 		this.context.addAll ( context ) ;
@@ -79,7 +77,7 @@ public class ValidationException extends RuntimeException {
 			Tray t = context.get ( i ) ;
 			// we can be assured that message is non-null, here
 			String message = reg.format ( t.code ( ), CONTEXT, t.message ( ) ) ;
-			Throwable throwable = t.t ( ) ;
+			Throwable throwable = t.throwable ( ) ;
 			pw.print ( indent ) ;
 			for ( int j = 0 ; j < i ; j++ ) {
 				pw.print ( " " ) ;
