@@ -71,6 +71,7 @@ public class ValidationContext {
 		context.pop ( ) ;
 	}
 
+	// Because once you pop, you actually *can* stop ...
 	public boolean canPop ( ) {
 		return ! context.isEmpty ( ) ;
 	}
