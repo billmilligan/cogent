@@ -93,8 +93,8 @@ public class StringFactory {
 		for ( Entry e : sf.entries ) {
 			if ( e instanceof Fixed f ) {
 				sb.append ( f.asString ( ) ) ;
-			} else if ( e instanceof PlaceHolder m ) {
-				build ( sb, m.getFactory ( ) ) ;
+			} else { // Must be a PlaceHolder m ) {
+				build ( sb, ( ( PlaceHolder ) e ).getFactory ( ) ) ;
 			}
 		}
 		return sb ;
