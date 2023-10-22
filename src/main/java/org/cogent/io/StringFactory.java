@@ -5,6 +5,14 @@ import java.util.List ;
 import java.util.function.Supplier ;
 import java.util.stream.Collectors ;
 
+/**
+ * Kind of like a StringBuilder but maybe a little more
+ * useful if you want to add text in the middle later on.
+ * The original idea was to make a sort of a String tree
+ * because the idea of all those System.arraycopy() operations
+ * going off for so many StringBuffer/StringBuilder
+ * resizes was too much for my poor heart to take.
+ */
 public class StringFactory {
 
 	private static final int DEFAULT_APPROX_LEN = 25 ;

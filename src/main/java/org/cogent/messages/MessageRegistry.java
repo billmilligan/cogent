@@ -64,7 +64,7 @@ public class MessageRegistry {
 	}
 
 	private String [ ] quoteEach ( Object [ ] params ) {
-		return Arrays.asList ( params ).stream ( ).map ( this::quote ).toList ( ).toArray ( new String [ 0 ] ) ;
+		return Arrays.asList ( params ).stream ( ).map ( this::quote ).toList ( ).toArray ( new String [ params.length ] ) ;
 	}
 
 	private String quote ( Object s ) {
