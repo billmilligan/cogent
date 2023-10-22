@@ -1,4 +1,4 @@
-package org.cogent.validation;
+package org.cogent.validation ;
 
 import org.junit.jupiter.api.Test ;
 
@@ -22,16 +22,19 @@ public class ValidationContextTest {
 		FOO, BAR, BAZ, QUUX
 	}
 
-	private MessageRegistry reg = new MessageRegistry ( ) {{
-		this.register ( FOO, CONTEXT, "This is the foo context {0}, {1}.", 2 ) ;
-		this.register ( FOO, FAILURE, "This is the foo failure {0}, {1}, {2}.", 3 ) ;
-		this.register ( BAR, CONTEXT, "This is the bar context {0}, {1}.", 2 ) ;
-		this.register ( BAR, FAILURE, "This is the bar failure {0}, {1}, {2}.", 3 ) ;
-		this.register ( BAZ, CONTEXT, "This is the baz context {0}, {1}.", 2 ) ;
-		this.register ( BAZ, FAILURE, "This is the baz failure {0}, {1}, {2}.", 3 ) ;
-		this.register ( QUUX, CONTEXT, "This is the quux context {0}, {1}.", 2 ) ;
-		this.register ( QUUX, FAILURE, "This is the quux failure {0}, {1}.", 2 ) ;
-	}} ;
+	private MessageRegistry reg = new MessageRegistry ( ) {
+
+		{
+			this.register ( FOO, CONTEXT, "This is the foo context {0}, {1}.", 2 ) ;
+			this.register ( FOO, FAILURE, "This is the foo failure {0}, {1}, {2}.", 3 ) ;
+			this.register ( BAR, CONTEXT, "This is the bar context {0}, {1}.", 2 ) ;
+			this.register ( BAR, FAILURE, "This is the bar failure {0}, {1}, {2}.", 3 ) ;
+			this.register ( BAZ, CONTEXT, "This is the baz context {0}, {1}.", 2 ) ;
+			this.register ( BAZ, FAILURE, "This is the baz failure {0}, {1}, {2}.", 3 ) ;
+			this.register ( QUUX, CONTEXT, "This is the quux context {0}, {1}.", 2 ) ;
+			this.register ( QUUX, FAILURE, "This is the quux failure {0}, {1}.", 2 ) ;
+		}
+	} ;
 
 	// also tests failCurrentContext
 	@Test
@@ -109,7 +112,7 @@ public class ValidationContextTest {
 		ctx.pushContext ( BAR, "P3", "P4" ) ;
 		ctx.pushContext ( BAZ, "P5", "P6" ) ;
 		ctx.popContext ( ) ;
-		ctx.fail ( QUUX, "P7", "P8" );
+		ctx.fail ( QUUX, "P7", "P8" ) ;
 		try {
 			ctx.airGrievances ( ) ;
 		} catch ( ValidationException ve ) {
@@ -451,6 +454,6 @@ public class ValidationContextTest {
 			assertEquals ( 1, t.message ( ).length ) ;
 			assertEquals ( 6, t.message ( ) [ 0 ] ) ;
 			assertNull ( t.throwable ( ) ) ;
-}
+		}
 	}
 }

@@ -122,6 +122,7 @@ public class ValidationExceptionTest {
 			assertContains ( actual, "CONTEXT" ) ;
 			assertContains ( actual, "TRACE" ) ;
 			assertContains ( actual, "FOO" ) ;
+			assertNotContains ( actual, "Fallacies!" ) ;
 			assertEquals ( FOO, t.getCode ( ) ) ;
 			assertNotNull ( t.getCause ( ) ) ;
 			Throwable cause = t.getCause ( ) ;
