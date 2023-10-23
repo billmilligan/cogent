@@ -2,6 +2,7 @@ package org.cogent.model;
 
 import java.io.PrintWriter ;
 
+import org.cogent.io.PrintWriterSink ;
 import org.cogent.io.WriteContext ;
 
 public class ImportStatement implements Writeable {
@@ -19,6 +20,8 @@ public class ImportStatement implements Writeable {
 
 	@Override
 	public String toString ( ) {
-		return "ImportStatement of " + name ;
+		PrintWriterSink sink = new PrintWriterSink ( ) ;
+		write ( sink, new WriteContext ( ) ) ;
+		return sink.getContents ( ) ;
 	}
 }

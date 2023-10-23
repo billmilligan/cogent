@@ -34,7 +34,7 @@ public class TDDTrickBag {
 
 	@SafeVarargs
 	public static <T> T roll ( T ... ts ) {
-		return ts [ rollDice ( 0, ts.length ) ] ;
+		return ts [ rollDice ( 0, ts.length - 1 ) ] ;
 	}
 
 	public static String words ( int count ) {

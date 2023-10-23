@@ -55,7 +55,7 @@ public class SimpleJavaSteps {
 	public void setupClassDefWithValidName ( ) {
 		String validTypeName = JavaIdentifierTrickBag.validLatinJavaTypeName ( ) ;
 		scope.set ( EXPECTED_TYPE_NAME, validTypeName ) ;
-		JavaTypeDefinition def = new JavaClassDefinition ( validTypeName ) ;
+		JavaTypeDefinition def = new JavaClassDefinition ( null, validTypeName ) ;
 		scope.set ( SELECTED_DEFINITION, def ) ;
 	}
 

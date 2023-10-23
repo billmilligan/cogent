@@ -2,8 +2,8 @@ package org.cogent.model;
 
 public class JavaClassDefinition extends JavaTypeDefinition {
 
-	public JavaClassDefinition ( String simpleName ) {
-		super ( simpleName ) ;
+	public JavaClassDefinition ( VisibilityModifier modifier, String simpleName ) {
+		super ( modifier, simpleName ) ;
 	}
 
 	@Override

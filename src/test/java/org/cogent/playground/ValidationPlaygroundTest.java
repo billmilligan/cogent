@@ -33,7 +33,7 @@ public class ValidationPlaygroundTest {
 
 	@Test
 	public void workingOutValidation ( ) throws Exception {
-		JavaClassDefinition def = new JavaClassDefinition ( "A1234" ) ;
+		JavaClassDefinition def = new JavaClassDefinition ( null, "A1234" ) ;
 		def.setVisibility ( VisibilityModifier.PRIVATE ) ;
 		JavaSourceFile jf = new JavaSourceFile ( "123!4#.jarva" ) ;
 		jf.setMainClass ( def ) ;

@@ -33,11 +33,22 @@ public abstract class JavaTypeDefinition implements Importable, Writeable, Fully
 	protected List <GenericVariable> classLevelGenerics = new ArrayList <> ( ) ;
 	protected List <JavaClassContent> contents = new ArrayList <> ( ) ;
 
-	public JavaTypeDefinition ( String simpleName ) {
+	public JavaTypeDefinition ( VisibilityModifier visibility, String simpleName ) {
+		this.visibility = visibility ;
 		this.simpleName = simpleName ;
 	}
 
 	public abstract Kind getKind ( ) ;
+
+	@Override
+	public ImportStatement asImport ( ) {
+		return new ImportStatement ( getFullyQualifiedName ( ) ) ;
+	}
+
+	@Override
+	public String getFullyQualifiedName ( ) {
+		return pkg.map ( p -> p.getFullyQualifiedName ( ) + "." ).orElse ( "" ) + getSimpleName ( ) ;
+	}
 
 	@Override
 	public String toString ( ) {
