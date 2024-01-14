@@ -124,6 +124,9 @@ public class JavaTypeDefinitionTest {
 		ImportStatement importStatement = def.asImport ( ) ;
 		assertEquals ( "import " + name + " ;" + endln, importStatement.toString ( ) ) ;
 		assertEquals ( VisibilityModifier.PUBLIC, def.getVisibility ( ) ) ;
+
+		assertTrue ( def.getSuperClass ( ).isPresent ( ) ) ;
+		assertEquals ( def.getSuperClass ( ).get ( ), superRef ) ;
 	}
 
 	private String generatePackageName ( ) {
