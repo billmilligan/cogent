@@ -22,7 +22,7 @@ import lombok.Setter ;
 public abstract class JavaTypeDefinition implements Importable, Writeable, FullyQualifiable, Validatable {
 
 	protected Optional <JavaPackage> pkg = Optional.empty ( ) ;
-	protected List <Importable> imports = new ArrayList <> ( ) ;
+	protected Set <Importable> imports = new TreeSet <> ( ) ;
 	protected List <Comment> topLevelComments = new ArrayList <> ( ) ;
 	protected List <JavaAnnotationReference> annotations = new ArrayList <> ( ) ;
 	protected VisibilityModifier visibility ;
@@ -39,6 +39,9 @@ public abstract class JavaTypeDefinition implements Importable, Writeable, Fully
 	}
 
 	public abstract Kind getKind ( ) ;
+	public void reifyImports ( ) {
+		superClass.ifPresent ( p -> imports.add ( p ) ) ;
+	}
 
 	@Override
 	public ImportStatement asImport ( ) {
@@ -63,12 +66,13 @@ public abstract class JavaTypeDefinition implements Importable, Writeable, Fully
 
 	@Override
 	public InputStream openInputStream ( WriteContext wc ) {
+		reifyImports ( ) ;
 		return new SubsequentInputStream ( ) {{
 			pkg.ifPresent ( p -> add ( p, wc ) ) ;
 			if ( pkg.isPresent ( ) ) {
 				addln ( "" ) ;
 			}
-			imports.forEach ( p -> add ( p, wc ) ) ;
+			imports.forEach ( p -> add ( p.asImport ( ), wc ) ) ;
 			if ( ! imports.isEmpty ( ) ) {
 				addln ( "" ) ;
 			}

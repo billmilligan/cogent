@@ -2,9 +2,24 @@ package org.cogent.util ;
 
 import static org.cogent.util.TDDTrickBag.* ;
 
+import org.cogent.io.StringFactory;
+
 public class JavaIdentifierTrickBag {
 
 //	private String αρετη ; // TODO, add some stuff for more UTF-8
+
+	public static String validLatinJavaFQDN ( ) {
+		StringFactory sf = new StringFactory ( ) ;
+		sf.append ( roll ( "com", "org", "io", "bill" ) ) ;
+		int size = roll ( 2, 5 ) ;
+		for ( int i = 1 ; i < size ; i++ ) {
+			sf.append ( "." ) ;
+			sf.append ( validLatinJavaNontypeName ( ) ) ;
+		}
+		sf.append ( "." ) ;
+		sf.append ( validLatinJavaTypeName ( ) ) ;
+		return sf.toString ( ) ;
+	}
 
 	public static String validLatinJavaNontypeName ( ) {
 		StringBuilder sb = new StringBuilder ( ) ;

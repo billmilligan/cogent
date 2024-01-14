@@ -5,7 +5,7 @@ import java.io.PrintWriter ;
 import org.cogent.io.PrintWriterSink ;
 import org.cogent.io.WriteContext ;
 
-public class ImportStatement implements Writeable {
+public class ImportStatement implements Writeable, Comparable <ImportStatement> {
 
 	private String name ;
 
@@ -23,5 +23,10 @@ public class ImportStatement implements Writeable {
 		PrintWriterSink sink = new PrintWriterSink ( ) ;
 		write ( sink, new WriteContext ( ) ) ;
 		return sink.getContents ( ) ;
+	}
+
+	@Override
+	public int compareTo ( ImportStatement that ) {
+		return this.name.compareTo ( that.name ) ;
 	}
 }
