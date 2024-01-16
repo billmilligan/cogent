@@ -13,7 +13,7 @@ import java.util.stream.Collectors ;
  * going off for so many StringBuffer/StringBuilder
  * resizes was too much for my poor heart to take.
  */
-public class StringFactory {
+public class StringFactory implements CharSequence {
 
 	private static final int DEFAULT_APPROX_LEN = 25 ;
 	private List <Entry> entries = new ArrayList <> ( ) ;
@@ -148,5 +148,20 @@ public class StringFactory {
 		public String asString ( ) {
 			return supplier == null ? "null" : String.valueOf ( supplier.get ( ) ) ;
 		}
+	}
+
+	@Override
+	public char charAt ( int arg0 ) {
+		return toString ( ).charAt ( arg0 ) ;
+	}
+
+	@Override
+	public int length ( ) {
+		return toString ( ).length ( ) ;
+	}
+
+	@Override
+	public CharSequence subSequence ( int arg0, int arg1 ) {
+		return toString ( ).subSequence ( arg0, arg1 ) ;
 	}
 }
